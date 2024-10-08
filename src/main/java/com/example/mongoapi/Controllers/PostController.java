@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 public class PostController {
 
@@ -47,8 +49,35 @@ public class PostController {
     })
     public ResponseEntity<?> excluirPost(@PathVariable Long id){
 
-        return service.excluirPost(id);
+        return null;
 
     }
 
+    @GetMapping("/")
+    @Operation(summary = "Buscar os posts")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de posts retornada!",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Post.class))
+            ),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
+    })
+    public ResponseEntity<List<Post>> buscarPosts(){
+
+        return null;
+
+    }
+
+    @GetMapping("/")
+    @Operation(summary = "Buscar um post")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Post retornado!",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Post.class))
+            ),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
+    })
+    public ResponseEntity<?> buscarPost(){
+
+        return null;
+
+    }
 }
