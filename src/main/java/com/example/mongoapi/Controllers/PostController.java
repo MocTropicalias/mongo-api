@@ -1,5 +1,6 @@
 package com.example.mongoapi.Controllers;
 
+import com.example.mongoapi.Models.Comment;
 import com.example.mongoapi.Models.Post;
 import com.example.mongoapi.Services.PostService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -93,5 +94,19 @@ public class PostController {
         }
 
         return new ResponseEntity<>(post, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{idPost}")
+    @Operation(summary = "Adicionar um comentário ao post")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Comentário adicionado!", content = @Content)
+            ,
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
+    })
+    public ResponseEntity<?> adicionarComentario(@PathVariable("idPost") Long idPost, @RequestBody Comment comment){
+
+        service.adicionarComentario(idPost, comment);
+        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 }

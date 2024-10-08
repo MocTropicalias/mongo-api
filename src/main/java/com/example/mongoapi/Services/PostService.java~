@@ -1,6 +1,5 @@
 package com.example.mongoapi.Services;
 
-import com.example.mongoapi.Models.Comment;
 import com.example.mongoapi.Models.Post;
 import com.example.mongoapi.Repository.PostRepository;
 import org.springframework.data.domain.Page;
@@ -41,9 +40,5 @@ public class PostService {
 
     public List<Post> buscarPostsPorUsuario(Long userId){
         return repository.findByUserId(userId);
-    }
-
-    public void adicionarComentario(Long idPost, Comment comment){
-        repository.addComment(idPost, comment);
     }
 }
