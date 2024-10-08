@@ -25,8 +25,11 @@ public class Post {
     private String content;
     @Schema(description = "Lista de usuários que curtiram o post")
     private List<Long> likes;
+    @Schema(description = "Comentários do post")
     private List<Comment> comments;
+    @Schema(description = "Data de criação do post")
     private Date createdAt;
+    @Schema(description = "Data de exclusão do post")
     private Date deletedAt;
 
     public Post(Long id, Long userId, String userPhoto, String userName, String media, String title, String content, List<Comment> comments, Date createdAt, Date deletedAt) {

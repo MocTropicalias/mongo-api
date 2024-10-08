@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/post")
 public class PostController {
 
     private final PostService service;

@@ -1,0 +1,14 @@
+//package com.example.mongoapi.Models;
+//
+//import io.swagger.v3.oas.annotations.media.Schema;
+//
+//public class Comment {
+//    @Schema(description = "Id do usuário que fez o comentário")
+//    private Long userId;
+//    @Schema(description = "Url da imagem do usuário")
+//    private String userPhoto;
+//    @Schema(description = "Nome do usuário")
+//    private String userName;
+//    @Schema(description = "texto do comentário")
+//    private String content;
+//}
