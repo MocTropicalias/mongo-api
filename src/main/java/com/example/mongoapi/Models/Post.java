@@ -1,5 +1,6 @@
 package com.example.mongoapi.Models;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -8,19 +9,27 @@ import java.util.List;
 @Document
 public class Post {
 
+    @Schema(description = "Id do post")
     private Long id;
+    @Schema(description = "Id do usuario")
     private Long userId;
+    @Schema(description = "Url da imagem do usuario")
     private String userPhoto;
+    @Schema(description = "Nome do usuario")
     private String userName;
+    @Schema(description = "Url da imagem do post")
     private String media;
-    private String title; // Em Java, o tipo `String` já aceita `null`, então não é necessário usar `Optional` aqui
+    @Schema(description = "Título do post")
+    private String title;
+    @Schema(description = "Conteúdo do post")
     private String content;
-    private int likes;
+    @Schema(description = "Lista de usuários que curtiram o post")
+    private List<Long> likes;
     private List<Comment> comments;
     private Date createdAt;
     private Date deletedAt;
 
-    public Post(Long id, Long userId, String userPhoto, String userName, String media, String title, String content, int likes, List<Comment> comments, Date createdAt, Date deletedAt) {
+    public Post(Long id, Long userId, String userPhoto, String userName, String media, String title, String content, List<Comment> comments, Date createdAt, Date deletedAt) {
         this.id = id;
         this.userId = userId;
         this.userPhoto = userPhoto;
@@ -28,10 +37,11 @@ public class Post {
         this.media = media;
         this.title = title;
         this.content = content;
-        this.likes = likes;
         this.comments = comments;
         this.createdAt = createdAt;
         this.deletedAt = deletedAt;
+
+        this.likes = new java.util.ArrayList<>();
     }
 
     public Long getId() {
@@ -90,14 +100,6 @@ public class Post {
         this.content = content;
     }
 
-    public int getLikes() {
-        return likes;
-    }
-
-    public void setLikes(int likes) {
-        this.likes = likes;
-    }
-
     public List<Comment> getComments() {
         return comments;
     }
@@ -122,6 +124,14 @@ public class Post {
         this.deletedAt = deletedAt;
     }
 
+    public List<Long> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<Long> likes) {
+        this.likes = likes;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Post{");
@@ -132,7 +142,8 @@ public class Post {
         sb.append(", media='").append(media).append('\'');
         sb.append(", title='").append(title).append('\'');
         sb.append(", content='").append(content).append('\'');
-        sb.append(", likes=").append(likes);
+        sb.append(", likes=").append(likes.size());
+        sb.append(", listLiked=").append(likes);
         sb.append(", comments=").append(comments);
         sb.append(", createdAt=").append(createdAt);
         sb.append('}');

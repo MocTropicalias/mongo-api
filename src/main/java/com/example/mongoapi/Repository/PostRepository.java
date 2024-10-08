@@ -70,4 +70,8 @@ public class PostRepository {
         post.getComments().add(comment);
         mongoTemplate.save(post);
     }
+
+    public void alterLikes(Post post){
+        mongoTemplate.save(post);
+    }
 }

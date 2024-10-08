@@ -46,4 +46,22 @@ public class PostService {
     public void adicionarComentario(Long idPost, Comment comment){
         repository.addComment(idPost, comment);
     }
+
+    public int liked(Long idPost, Long userId){
+        Post post = repository.findById(idPost);
+
+        int retorno = 0;
+
+        if(post.getLikes().contains(userId)){
+            post.getLikes().remove(userId);
+        } else {
+            post.getLikes().add(userId);
+            retorno = 1;
+        }
+
+        repository.alterLikes(post);
+
+        return retorno;
+
+    }
 }

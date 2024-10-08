@@ -109,4 +109,17 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
+
+    @PatchMapping("/{idPost}/{userId}")
+    @Operation(summary = "Curtir um post")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Post curtido!", content = @Content)
+            ,
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
+    })
+    public ResponseEntity<?> liked(@PathVariable("idPost") Long idPost, @PathVariable("userId") Long userId){
+
+        service.liked(idPost, userId);
+        return new ResponseEntity<>(service.buscarPost(idPost), HttpStatus.OK);
+    }
 }
