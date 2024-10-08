@@ -2,6 +2,10 @@ package com.example.mongoapi.Repository;
 
 
 import com.example.mongoapi.Models.Post;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -21,8 +25,18 @@ public class PostRepository {
         return post;
     }
 
-    public List<Post> findAll() {
-        return mongoTemplate.findAll(Post.class);
+    public Page<Post> findAll(Pageable pageable) {
+
+        Query query = new Query().with(pageable);
+
+        // Busca os posts da página específica
+        List<Post> posts = mongoTemplate.find(query, Post.class);
+
+        // Conta total de posts para saber o número total de páginas
+        long total = mongoTemplate.count(new Query(), Post.class);
+
+        // Retorna um Page<Post> contendo a lista paginada e os metadados
+        return new PageImpl<>(posts, pageable, total);
     }
 
     public Post findById(Long id) {
