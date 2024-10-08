@@ -36,4 +36,10 @@ public class PostRepository {
         query.addCriteria(Criteria.where("id").is(id));
         mongoTemplate.remove(query, Post.class);
     }
+
+    public List<Post> findByUserId(Long userId) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("userId").is(userId));
+        return mongoTemplate.find(query, Post.class);
+    }
 }

@@ -49,7 +49,8 @@ public class PostController {
     })
     public ResponseEntity<?> excluirPost(@PathVariable Long id){
 
-        return null;
+        service.excluirPost(id);
+        return new ResponseEntity<>("Post excluído", HttpStatus.OK);
 
     }
 
@@ -63,21 +64,27 @@ public class PostController {
     })
     public ResponseEntity<List<Post>> buscarPosts(){
 
-        return null;
+        List<Post> list = service.buscarPosts();
+        return new ResponseEntity<>(list, HttpStatus.OK);
 
     }
 
-    @GetMapping("/")
+    @GetMapping("/{id}")
     @Operation(summary = "Buscar um post")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Post retornado!",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Post.class))
             ),
+            @ApiResponse(responseCode = "404", description = "Post não encontrado", content = @Content),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
     })
-    public ResponseEntity<?> buscarPost(){
+    public ResponseEntity<?> buscarPost(@PathVariable("id") Long id){
 
-        return null;
+        Post post = service.buscarPost(id);
+        if(post == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
+        return new ResponseEntity<>(post, HttpStatus.OK);
     }
 }

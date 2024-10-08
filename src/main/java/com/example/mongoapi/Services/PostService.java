@@ -33,4 +33,8 @@ public class PostService {
     public void excluirPost(Long id){
         repository.deleteById(id);
     }
+
+    public List<Post> buscarPostsPorUsuario(Long userId){
+        return repository.findByUserId(userId);
+    }
 }
