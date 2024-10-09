@@ -34,6 +34,14 @@ public class PostRepository {
         // Busca os posts da página específica
         List<Post> posts = mongoTemplate.find(query, Post.class);
 
+        for(Post post : posts) {
+            for(Comment comment : post.getComments()) {
+                if(comment.getDeletedAt() != null) {
+                    post.getComments().remove(comment);
+                }
+            }
+        }
+
         // Conta total de posts para saber o número total de páginas
         long total = mongoTemplate.count(new Query(), Post.class);
 
@@ -57,10 +65,27 @@ public class PostRepository {
         mongoTemplate.save(post);
     }
 
-    public List<Post> findByUserId(Long userId) {
+    public Page<Post> findByUserId(Pageable pageable, Long userId) {
         Query query = new Query();
         query.addCriteria(Criteria.where("userId").is(userId));
-        return mongoTemplate.find(query, Post.class);
+        query.addCriteria(Criteria.where("deletedAt").is(null));
+
+        // Busca os posts da página específica
+        List<Post> posts = mongoTemplate.find(query, Post.class);
+
+        for(Post post : posts) {
+            for(Comment comment : post.getComments()) {
+                if(comment.getDeletedAt() != null) {
+                    post.getComments().remove(comment);
+                }
+            }
+        }
+
+        // Conta total de posts para saber o número total de páginas
+        long total = mongoTemplate.count(new Query(), Post.class);
+
+        // Retorna um Page<Post> contendo a lista paginada e os metadados
+        return new PageImpl<>(posts, pageable, total);
     }
 
     public void addComment(Long idPost, Comment comment){

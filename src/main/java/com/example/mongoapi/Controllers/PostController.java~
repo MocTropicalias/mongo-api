@@ -58,22 +58,6 @@ public class PostController {
         return new ResponseEntity<>(postsPage, HttpStatus.OK);
     }
 
-    @GetMapping("/{userId}")
-    @Operation(summary = "Buscar os posts de um usuário")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Posts de um usuário retornados!",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Post.class))
-            ),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
-    })
-    public ResponseEntity<Page<Post>> buscarPostsPorUserId(@PathVariable("userId") Long userId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "50") int size){
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Post> postsPage = service.buscarPostsPorUsuario(pageable, userId);
-
-        return new ResponseEntity<>(postsPage, HttpStatus.OK);
-    }
-
 
     @GetMapping("/{id}")
     @Operation(summary = "Buscar um post")

@@ -32,15 +32,24 @@ public class PostService {
 
 
     public Post buscarPost(Long id){
-        return repository.findById(id);
+
+        Post post = repository.findById(id);
+
+        for(Comment comment : post.getComments()) {
+            if(comment.getDeletedAt() != null) {
+                post.getComments().remove(comment);
+            }
+        }
+
+        return post;
     }
 
     public void excluirPost(Long id){
         repository.deleteById(id);
     }
 
-    public List<Post> buscarPostsPorUsuario(Long userId){
-        return repository.findByUserId(userId);
+    public Page<Post> buscarPostsPorUsuario(Pageable pageable, Long userId){
+        return repository.findByUserId(pageable, userId);
     }
 
     public void adicionarComentario(Long idPost, Comment comment){
