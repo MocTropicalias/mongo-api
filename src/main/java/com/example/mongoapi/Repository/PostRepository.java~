@@ -80,7 +80,7 @@ public class PostRepository {
         query.addCriteria(Criteria.where("id").is(idPost));
         Post post = mongoTemplate.findOne(query, Post.class);
         //Eu preciso remover o comentário na posição especificada da array
-        post.getComments().get(idComment).setDeletedAt(new java.util.Date());
+        post.getComments().remove(post.getComments().get(idComment));
         mongoTemplate.save(post);
         return post;
     }
