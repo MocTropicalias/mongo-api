@@ -64,8 +64,4 @@ public class PostService {
         return retorno;
 
     }
-
-    public Post excluirComentario(Long idPost, int commentId){
-        return repository.removeComment(idPost, commentId);
-    }
 }

@@ -2,6 +2,8 @@ package com.example.mongoapi.Models;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.util.Date;
+
 public class Comment {
     @Schema(description = "Id do usuário que fez o comentário")
     private Long userId;
@@ -11,6 +13,11 @@ public class Comment {
     private String userName;
     @Schema(description = "texto do comentário")
     private String content;
+
+    @Schema(description = "Data de criação do comentário")
+    private Date createdAt;
+    @Schema(description = "Data de exclusão do comentário")
+    private Date deletedAt;
 
     public Long getUserId() {
         return userId;
@@ -42,5 +49,21 @@ public class Comment {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(Date deletedAt) {
+        this.deletedAt = deletedAt;
     }
 }

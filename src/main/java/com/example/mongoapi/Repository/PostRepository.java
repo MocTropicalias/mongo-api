@@ -74,4 +74,14 @@ public class PostRepository {
     public void alterLikes(Post post){
         mongoTemplate.save(post);
     }
+
+    public Post removeComment(Long idPost, int idComment){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(idPost));
+        Post post = mongoTemplate.findOne(query, Post.class);
+        //Eu preciso remover o comentário na posição especificada da array
+        post.getComments().remove(post.getComments().get(idComment));
+        mongoTemplate.save(post);
+        return post;
+    }
 }

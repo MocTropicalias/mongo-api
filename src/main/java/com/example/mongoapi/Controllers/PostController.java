@@ -21,14 +21,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/post")
 public class PostController {
-
     private final PostService service;
-
-
     public PostController(PostService service) {
         this.service = service;
     }
-
 
     @PostMapping("/")
     @Operation(summary = "Criar post")
@@ -41,21 +37,6 @@ public class PostController {
     public ResponseEntity<?> inserirPost(@RequestBody Post post){
 
         return new ResponseEntity<>(service.inserirPost(post), HttpStatus.OK);
-
-    }
-
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Excluir um post")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Post excluído",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Post.class))
-            ),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
-    })
-    public ResponseEntity<?> excluirPost(@PathVariable Long id){
-
-        service.excluirPost(id);
-        return new ResponseEntity<>("Post excluído", HttpStatus.OK);
 
     }
 
@@ -122,5 +103,34 @@ public class PostController {
 
         service.liked(idPost, userId);
         return new ResponseEntity<>(service.buscarPost(idPost), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Excluir um post")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Post excluído",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Post.class))
+            ),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
+    })
+    public ResponseEntity<?> excluirPost(@PathVariable Long id){
+
+        service.excluirPost(id);
+        return new ResponseEntity<>("Post excluído", HttpStatus.OK);
+
+    }
+
+    @DeleteMapping("/{idPost}/{commentPosition}")
+    @Operation(summary = "Excluir um comentário")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Comentário excluído",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Post.class))
+            ),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
+    })
+    public ResponseEntity<?> excluirComentario(@PathVariable("idPost") Long idPost, @PathVariable("commentPosition") int commentPosition){
+
+        Post postAlterado = service.excluirComentario(idPost, commentPosition);
+        return new ResponseEntity<>(postAlterado, HttpStatus.OK);
     }
 }
