@@ -58,7 +58,7 @@ public class PostController {
         return new ResponseEntity<>(postsPage, HttpStatus.OK);
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     @Operation(summary = "Buscar os posts de um usuário")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Posts de um usuário retornados!",
