@@ -28,18 +28,16 @@ public class PostRepository {
 
     public Page<Post> findAll(Pageable pageable) {
 
+        // Cria uma query para buscar documentos onde o campo "deletedAt" não exista
         Query query = new Query().with(pageable);
-        query.addCriteria(Criteria.where("deletedAt").is(null));
+        query.addCriteria(Criteria.where("deletedAt").exists(false));  // Verifica se o campo "deletedAt" não existe
 
         // Busca os posts da página específica
         List<Post> posts = mongoTemplate.find(query, Post.class);
 
         for(Post post : posts) {
-            for(Comment comment : post.getComments()) {
-                if(comment.getDeletedAt() != null) {
-                    post.getComments().remove(comment);
-                }
-            }
+            // Remove comentários onde o campo "deletedAt" existe
+            post.getComments().removeIf(comment -> comment.getDeletedAt() != null);
         }
 
         // Conta total de posts para saber o número total de páginas
@@ -48,6 +46,7 @@ public class PostRepository {
         // Retorna um Page<Post> contendo a lista paginada e os metadados
         return new PageImpl<>(posts, pageable, total);
     }
+
 
     public Post findById(Long id) {
         Query query = new Query();
@@ -66,23 +65,21 @@ public class PostRepository {
     }
 
     public Page<Post> findByUserId(Pageable pageable, Long userId) {
-        Query query = new Query();
+        // Cria uma query para buscar posts de um usuário específico e onde "deletedAt" não existe
+        Query query = new Query().with(pageable);
         query.addCriteria(Criteria.where("userId").is(userId));
-        query.addCriteria(Criteria.where("deletedAt").is(null));
+        query.addCriteria(Criteria.where("deletedAt").exists(false));
 
         // Busca os posts da página específica
         List<Post> posts = mongoTemplate.find(query, Post.class);
 
+        // Remove os comentários onde "deletedAt" não é nulo
         for(Post post : posts) {
-            for(Comment comment : post.getComments()) {
-                if(comment.getDeletedAt() != null) {
-                    post.getComments().remove(comment);
-                }
-            }
+            post.getComments().removeIf(comment -> comment.getDeletedAt() != null);
         }
 
-        // Conta total de posts para saber o número total de páginas
-        long total = mongoTemplate.count(new Query(), Post.class);
+        // Conta o total de posts para saber o número total de páginas
+        long total = mongoTemplate.count(query, Post.class);
 
         // Retorna um Page<Post> contendo a lista paginada e os metadados
         return new PageImpl<>(posts, pageable, total);
