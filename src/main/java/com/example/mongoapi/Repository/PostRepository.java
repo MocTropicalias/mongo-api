@@ -3,10 +3,7 @@ package com.example.mongoapi.Repository;
 
 import com.example.mongoapi.Models.Comment;
 import com.example.mongoapi.Models.Post;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -29,6 +26,7 @@ public class PostRepository {
     public List<Post> findAll(){
         Query query = new Query();
         query.addCriteria(Criteria.where("deletedAt").exists(false));
+        query.with(Sort.by(Sort.Direction.DESC, "createdAt"));
         return mongoTemplate.find(query, Post.class);
     }
 
@@ -89,6 +87,15 @@ public class PostRepository {
 
         // Retorna um Page<Post> contendo a lista paginada e os metadados
         return new PageImpl<>(posts, pageable, total);
+    }
+
+    public List<Post> findByUserId(Long userId) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("userId").is(userId));
+        query.addCriteria(Criteria.where("deletedAt").exists(false));
+        //Ordenar pela data de criação mais recente
+        query.with(Sort.by(Sort.Direction.DESC, "createdAt"));
+        return mongoTemplate.find(query, Post.class);
     }
 
     public void addComment(Long idPost, Comment comment){

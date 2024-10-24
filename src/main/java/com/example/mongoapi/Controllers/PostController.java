@@ -61,12 +61,11 @@ public class PostController {
             ),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
     })
-    public ResponseEntity<Page<Post>> buscarPostsPorUserId(@PathVariable("userId") Long userId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "50") int size){
+    public ResponseEntity<List<Post>> buscarPostsPorUserId(@PathVariable("userId") Long userId){
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Post> postsPage = service.buscarPostsPorUsuario(pageable, userId);
+        List<Post> posts = service.buscarPostsPorUsuario(userId);
 
-        return new ResponseEntity<>(postsPage, HttpStatus.OK);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
 

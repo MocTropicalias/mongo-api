@@ -52,8 +52,12 @@ public class PostService {
         repository.deleteById(id);
     }
 
-    public Page<Post> buscarPostsPorUsuario(Pageable pageable, Long userId){
+    public Page<Post> buscarPostsPaginadosPorUsuario(Pageable pageable, Long userId){
         return repository.findByUserId(pageable, userId);
+    }
+
+    public List<Post> buscarPostsPorUsuario(Long userId){
+        return repository.findByUserId(userId);
     }
 
     public void adicionarComentario(Long idPost, Comment comment){
