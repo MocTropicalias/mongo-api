@@ -1,6 +1,8 @@
 package com.example.mongoapi.Models;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -10,7 +12,8 @@ import java.util.List;
 public class Post {
 
     @Schema(description = "Id do post")
-    private Long _id;
+    @Id
+    private ObjectId _id;
     @Schema(description = "Id do usuario")
     private Long userId;
     @Schema(description = "Url da imagem do usuario")
@@ -46,11 +49,11 @@ public class Post {
         this.likes = new java.util.ArrayList<>();
     }
 
-    public Long getId() {
-        return _id;
+    public String getId() {
+        return  _id.toHexString();
     }
 
-    public void setId(Long id) {
+    public void setId(ObjectId id) {
         this._id = id;
     }
 
@@ -137,7 +140,7 @@ public class Post {
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Post{");
-        sb.append("id=").append(_id);
+        sb.append("_id=").append(_id.toHexString());
         sb.append(", userId=").append(userId);
         sb.append(", userPhoto='").append(userPhoto).append('\'');
         sb.append(", userName='").append(userName).append('\'');

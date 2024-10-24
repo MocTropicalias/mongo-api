@@ -26,6 +26,12 @@ public class PostRepository {
         return post;
     }
 
+    public List<Post> findAll(){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("deletedAt").exists(false));
+        return mongoTemplate.find(query, Post.class);
+    }
+
     public Page<Post> findAll(Pageable pageable) {
 
         // Cria uma query para buscar documentos onde o campo "deletedAt" não exista

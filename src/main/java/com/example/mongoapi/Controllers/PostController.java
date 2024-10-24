@@ -48,14 +48,9 @@ public class PostController {
             ),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
     })
-    public ResponseEntity<Page<Post>> buscarPosts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "50") int size) {
+    public ResponseEntity<List<Post>> buscarPosts(){
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Post> postsPage = service.buscarPostsPaginados(pageable);
-
-        return new ResponseEntity<>(postsPage, HttpStatus.OK);
+        return new ResponseEntity<>(service.buscarPosts(), HttpStatus.OK);
     }
 
     @GetMapping("/user/{userId}")

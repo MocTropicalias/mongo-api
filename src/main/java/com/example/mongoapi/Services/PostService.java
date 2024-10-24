@@ -25,6 +25,10 @@ public class PostService {
         return repository.save(post);
     }
 
+    public List<Post> buscarPosts(){
+        return repository.findAll();
+    }
+
     public Page<Post> buscarPostsPaginados(Pageable pageable) {
         return repository.findAll(pageable);
     }

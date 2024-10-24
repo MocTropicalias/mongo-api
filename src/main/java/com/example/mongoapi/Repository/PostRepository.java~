@@ -99,9 +99,8 @@ public class PostRepository {
 
     public Post removeComment(Long idPost, int idComment){
         Query query = new Query();
-        query.addCriteria(Criteria.where("id").is(idPost));
+        query.addCriteria(Criteria.where("_id").is(idPost));
         Post post = mongoTemplate.findOne(query, Post.class);
-        //Eu preciso remover o comentário na posição especificada da array
         post.getComments().get(idComment).setDeletedAt(new java.util.Date());
         mongoTemplate.save(post);
         return post;
