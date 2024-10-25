@@ -22,6 +22,8 @@ public class Post {
     private String userName;
     @Schema(description = "Url da imagem do post")
     private String media;
+    @Schema(description = "Título do post")
+    private String title;
     @Schema(description = "Conteúdo do post")
     private String content;
     @Schema(description = "Lista de usuários que curtiram o post")
@@ -33,11 +35,12 @@ public class Post {
     @Schema(description = "Data de exclusão do post")
     private Date deletedAt;
 
-    public Post(Long userId, String userPhoto, String userName, String media, String content, List<Comment> comments, Date createdAt, Date deletedAt) {
+    public Post(Long userId, String userPhoto, String userName, String media, String title, String content, List<Comment> comments, Date createdAt, Date deletedAt) {
         this.userId = userId;
         this.userPhoto = userPhoto;
         this.userName = userName;
         this.media = media;
+        this.title = title;
         this.content = content;
         this.comments = comments;
         this.createdAt = createdAt;
@@ -84,6 +87,14 @@ public class Post {
 
     public void setMedia(String media) {
         this.media = media;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getContent() {
@@ -134,6 +145,7 @@ public class Post {
         sb.append(", userPhoto='").append(userPhoto).append('\'');
         sb.append(", userName='").append(userName).append('\'');
         sb.append(", media='").append(media).append('\'');
+        sb.append(", title='").append(title).append('\'');
         sb.append(", content='").append(content).append('\'');
         sb.append(", likes=").append(likes.size());
         sb.append(", listLiked=").append(likes);

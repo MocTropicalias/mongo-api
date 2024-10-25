@@ -26,7 +26,6 @@ public class PostRepository {
     public List<Post> findAll(){
         Query query = new Query();
         query.addCriteria(Criteria.where("deletedAt").exists(false));
-        query.with(Sort.by(Sort.Direction.DESC, "createdAt"));
         return mongoTemplate.find(query, Post.class);
     }
 
@@ -94,7 +93,7 @@ public class PostRepository {
         query.addCriteria(Criteria.where("userId").is(userId));
         query.addCriteria(Criteria.where("deletedAt").exists(false));
         //Ordenar pela data de criação mais recente
-        query.with(Sort.by(Sort.Direction.DESC, "createdAt"));
+        query.with(new Sort(Sort.Direction.DESC, "createdAt"));
         return mongoTemplate.find(query, Post.class);
     }
 
