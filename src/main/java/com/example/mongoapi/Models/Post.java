@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 import java.util.List;
 
-@Document
+@Document(collection = "${mongo.collection.post}")
 public class Post {
 
     @Schema(description = "Id do post")
