@@ -35,7 +35,7 @@ public class PostService {
 
 
 
-    public Post buscarPost(Long id){
+    public Post buscarPost(String id){
 
         Post post = repository.findById(id);
 
@@ -64,7 +64,7 @@ public class PostService {
         repository.addComment(idPost, comment);
     }
 
-    public int liked(Long idPost, Long userId){
+    public int liked(String idPost, Long userId){
         Post post = repository.findById(idPost);
 
         int retorno = 0;

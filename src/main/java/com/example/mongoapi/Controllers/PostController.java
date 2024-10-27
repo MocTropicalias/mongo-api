@@ -78,7 +78,7 @@ public class PostController {
             @ApiResponse(responseCode = "404", description = "Post não encontrado", content = @Content),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
     })
-    public ResponseEntity<?> buscarPost(@PathVariable("id") Long id){
+    public ResponseEntity<?> buscarPost(@PathVariable("id") String id){
 
         Post post = service.buscarPost(id);
         if(post == null){
@@ -109,7 +109,7 @@ public class PostController {
             ,
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
     })
-    public ResponseEntity<?> liked(@PathVariable("idPost") Long idPost, @PathVariable("userId") Long userId){
+    public ResponseEntity<?> liked(@PathVariable("idPost") String idPost, @PathVariable("userId") Long userId){
 
         service.liked(idPost, userId);
         return new ResponseEntity<>(service.buscarPost(idPost), HttpStatus.OK);

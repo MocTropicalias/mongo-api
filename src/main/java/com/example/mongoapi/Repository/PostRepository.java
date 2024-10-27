@@ -52,7 +52,7 @@ public class PostRepository {
     }
 
 
-    public Post findById(Long id) {
+    public Post findById(String id) {
         Query query = new Query();
         query.addCriteria(Criteria.where("_id").is(id));
         return mongoTemplate.findOne(query, Post.class);
