@@ -88,6 +88,26 @@ public class PostController {
         return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
+    @GetMapping("/searchPosts")
+    @Operation(summary = "Fazer uma pesquisa de posts")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Posts retornado!",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Post.class))
+            ),
+            @ApiResponse(responseCode = "404", description = "Nenhum post encontrado!", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
+    })
+    public ResponseEntity<?> searchPosts(@RequestParam("text") String text, @RequestParam("userId") Long userId, @RequestParam("following")List<Long> following){
+
+        List<Post> response = service.searchPosts(text, userId, following);
+        if(response == null || response.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+
     @PatchMapping("/{idPost}")
     @Operation(summary = "Adicionar um comentário ao post")
     @ApiResponses(value = {

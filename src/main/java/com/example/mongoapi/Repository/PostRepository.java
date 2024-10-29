@@ -5,6 +5,7 @@ import com.example.mongoapi.Models.Comment;
 import com.example.mongoapi.Models.Post;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
@@ -117,5 +118,9 @@ public class PostRepository {
         post.getComments().get(idComment).setDeletedAt(new java.util.Date());
         mongoTemplate.save(post);
         return post;
+    }
+
+    public List<Post> searchPosts(Aggregation aggregation){
+        return mongoTemplate.aggregate(aggregation, "post", Post.class).getMappedResults();
     }
 }
