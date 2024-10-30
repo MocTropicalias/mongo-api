@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -91,22 +92,25 @@ public class PostController {
     @GetMapping("/searchPosts")
     @Operation(summary = "Fazer uma pesquisa de posts")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Posts retornado!",
+            @ApiResponse(responseCode = "200", description = "Posts retornados!",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Post.class))
             ),
             @ApiResponse(responseCode = "404", description = "Nenhum post encontrado!", content = @Content),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
     })
-    public ResponseEntity<?> searchPosts(@RequestParam("text") String text, @RequestParam("userId") Long userId, @RequestParam("following")List<Long> following){
+    public ResponseEntity<List<Post>> searchPosts(@RequestParam(value = "text", required = false) String text,
+                                                  @RequestParam(value = "userId", required = false) Long userId,
+                                                  @RequestParam(value = "following", required = false) List<Long> following) {
 
         List<Post> response = service.searchPosts(text, userId, following);
-        if(response == null || response.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (response == null || response.isEmpty()) {
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(response, HttpStatus.OK);
-
     }
+
+
 
     @PatchMapping("/{idPost}")
     @Operation(summary = "Adicionar um comentário ao post")
