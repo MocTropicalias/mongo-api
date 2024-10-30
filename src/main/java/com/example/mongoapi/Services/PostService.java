@@ -12,6 +12,10 @@ import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -95,7 +99,7 @@ public class PostService {
     }
 
 
-    public List<Post> searchPosts(String text, Long userId, List<Long> following) {
+    public List<Post> searchPosts(String text, Long userId, Boolean following, Boolean liked) throws IOException {
         List<AggregationOperation> operations = new ArrayList<>();
 
         // Condição para o campo `text` (procura por qualquer texto se estiver vazio)
@@ -104,13 +108,26 @@ public class PostService {
         }
 
         // Condição para o campo `userId` (procura por qualquer usuário dentro de likes se for nulo)
-        if (userId != null && userId > 0) {
+        if (liked) {
             operations.add(Aggregation.match(Criteria.where("likes").in(userId)));
         }
 
         // Condição para o campo `following` (procura por qualquer id de usuário se for vazio ou nulo)
-        if (following != null && !following.isEmpty()) {
-            operations.add(Aggregation.match(Criteria.where("userId").in(following)));
+        if (following) {
+
+            List<Long> followingIds = new ArrayList<>();
+
+            String url = "https://tropicalias-api-dev.onrender.com/follow/getAllfollowing/" + userId;
+            HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+            if(conn.getResponseCode() == 200){
+                followingIds = (List<Long>) (Object) conn.getContent();
+            } else {
+                throw new IOException(conn.getResponseMessage());
+            }
+
+            operations.add(Aggregation.match(Criteria.where("userId").in(followingIds)));
         }
 
         return repository.searchPosts(Aggregation.newAggregation(operations));

@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -100,9 +101,11 @@ public class PostController {
     })
     public ResponseEntity<List<Post>> searchPosts(@RequestParam(value = "text", required = false, defaultValue = "") String text,
                                                   @RequestParam(value = "userId", required = false, defaultValue = "0") Long userId,
-                                                  @RequestParam(value = "following", required = false, defaultValue = "" ) List<Long> following) {
+                                                  @RequestParam(value = "following", required = false, defaultValue = "false" ) Boolean following,
+                                                  @RequestParam(value = "liked", required = false, defaultValue = "true" ) Boolean liked
+    ) throws IOException {
 
-        List<Post> response = service.searchPosts(text, userId, following);
+        List<Post> response = service.searchPosts(text, userId, following, liked);
         if (response == null || response.isEmpty()) {
             return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NOT_FOUND);
         }
