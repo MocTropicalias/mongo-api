@@ -98,9 +98,9 @@ public class PostController {
             @ApiResponse(responseCode = "404", description = "Nenhum post encontrado!", content = @Content),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
     })
-    public ResponseEntity<List<Post>> searchPosts(@RequestParam(value = "text", required = false, defaultValue = "") String text,
-                                                  @RequestParam(value = "userId", required = false, defaultValue = "0") Long userId,
-                                                  @RequestParam(value = "following", required = false, defaultValue = "" ) List<Long> following) {
+    public ResponseEntity<List<Post>> searchPosts(@RequestParam(value = "text", required = false) String text,
+                                                  @RequestParam(value = "userId", required = false) Long userId,
+                                                  @RequestParam(value = "following", required = false) List<Long> following) {
 
         List<Post> response = service.searchPosts(text, userId, following);
         if (response == null || response.isEmpty()) {

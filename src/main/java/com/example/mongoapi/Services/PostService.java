@@ -104,7 +104,7 @@ public class PostService {
         }
 
         // Condição para o campo `userId` (procura por qualquer usuário dentro de likes se for nulo)
-        if (userId != null) {
+        if (userId != null && userId > 0) {
             operations.add(Aggregation.match(Criteria.where("likes").in(userId)));
         }
 
