@@ -72,7 +72,7 @@ public class PostService {
         return repository.findByUserId(userId);
     }
 
-    public void adicionarComentario(Long idPost, Comment comment){
+    public void adicionarComentario(String idPost, Comment comment){
         repository.addComment(idPost, comment);
     }
 

@@ -122,7 +122,7 @@ public class PostController {
             ,
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
     })
-    public ResponseEntity<?> adicionarComentario(@PathVariable("idPost") Long idPost, @RequestBody Comment comment){
+    public ResponseEntity<?> adicionarComentario(@PathVariable("idPost") String idPost, @RequestBody Comment comment){
 
         service.adicionarComentario(idPost, comment);
         return new ResponseEntity<>(HttpStatus.OK);

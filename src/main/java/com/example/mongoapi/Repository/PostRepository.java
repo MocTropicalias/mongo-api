@@ -99,7 +99,7 @@ public class PostRepository {
         return mongoTemplate.find(query, Post.class);
     }
 
-    public void addComment(Long idPost, Comment comment){
+    public void addComment(String idPost, Comment comment){
         Query query = new Query();
         query.addCriteria(Criteria.where("_id").is(idPost));
         Post post = mongoTemplate.findOne(query, Post.class);
