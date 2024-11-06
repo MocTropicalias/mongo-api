@@ -122,7 +122,7 @@ public class PostService {
             List<Long> followingIds = new ArrayList<>();
 
             // Faz uma chamada para obter a lista de seguidores
-            String url = "https://tropicalias-api-dev.onrender.com/follow/getAllfollowing/" + userId;
+            String url = "https://tropicalias-api-ghrd.onrender.com/follow/getAllfollowing/" + userId;
             HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
@@ -133,7 +133,10 @@ public class PostService {
                     ObjectMapper mapper = new ObjectMapper();
                     followingIds = mapper.readValue(reader, new TypeReference<List<Long>>() {});
                 }
-            } else {
+            } else if(conn.getResponseCode() == 404) {
+                return Collections.emptyList();
+            }
+            else {
                 throw new IOException("Failed to fetch following IDs: " + conn.getResponseMessage());
             }
 

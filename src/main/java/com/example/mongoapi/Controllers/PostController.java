@@ -96,7 +96,7 @@ public class PostController {
             @ApiResponse(responseCode = "200", description = "Posts retornados!",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Post.class))
             ),
-            @ApiResponse(responseCode = "404", description = "Nenhum post encontrado!", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Nenhum post encontrado! / Usuário não encontrado!", content = @Content),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
     })
     public ResponseEntity<List<Post>> searchPosts(@RequestParam(value = "text", required = false, defaultValue = "") String text,
