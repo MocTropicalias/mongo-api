@@ -102,7 +102,7 @@ public class PostController {
     public ResponseEntity<List<Post>> searchPosts(@RequestParam(value = "text", required = false, defaultValue = "") String text,
                                                   @RequestParam(value = "userId", required = false, defaultValue = "0") Long userId,
                                                   @RequestParam(value = "following", required = false, defaultValue = "false" ) Boolean following,
-                                                  @RequestParam(value = "liked", required = false, defaultValue = "false" ) Boolean liked
+                                                  @RequestParam(value = "liked", required = false, defaultValue = "true" ) Boolean liked
     ) throws IOException {
 
         if(text.isEmpty() && !following && !liked){
