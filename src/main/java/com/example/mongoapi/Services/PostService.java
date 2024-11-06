@@ -122,7 +122,7 @@ public class PostService {
             List<Long> followingIds = new ArrayList<>();
 
             // Faz uma chamada para obter a lista de seguidores
-            String url = "https://tropicalias-api-ghrd.onrender.com/follow/getAllfollowing/" + userId;
+            String url = System.getenv("API_URL") + "/follow/getAllfollowing/" + userId;
             HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
