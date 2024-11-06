@@ -5,6 +5,7 @@ import com.example.mongoapi.Models.Comment;
 import com.example.mongoapi.Models.Post;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
@@ -52,7 +53,7 @@ public class PostRepository {
     }
 
 
-    public Post findById(Long id) {
+    public Post findById(String id) {
         Query query = new Query();
         query.addCriteria(Criteria.where("_id").is(id));
         return mongoTemplate.findOne(query, Post.class);
@@ -98,7 +99,7 @@ public class PostRepository {
         return mongoTemplate.find(query, Post.class);
     }
 
-    public void addComment(Long idPost, Comment comment){
+    public void addComment(String idPost, Comment comment){
         Query query = new Query();
         query.addCriteria(Criteria.where("_id").is(idPost));
         Post post = mongoTemplate.findOne(query, Post.class);
@@ -117,5 +118,9 @@ public class PostRepository {
         post.getComments().get(idComment).setDeletedAt(new java.util.Date());
         mongoTemplate.save(post);
         return post;
+    }
+
+    public List<Post> searchPosts(Aggregation aggregation){
+        return mongoTemplate.aggregate(aggregation, Post.class, Post.class).getMappedResults();
     }
 }

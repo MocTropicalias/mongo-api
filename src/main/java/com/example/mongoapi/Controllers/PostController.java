@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -78,7 +80,7 @@ public class PostController {
             @ApiResponse(responseCode = "404", description = "Post não encontrado", content = @Content),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
     })
-    public ResponseEntity<?> buscarPost(@PathVariable("id") Long id){
+    public ResponseEntity<?> buscarPost(@PathVariable("id") String id){
 
         Post post = service.buscarPost(id);
         if(post == null){
@@ -88,6 +90,35 @@ public class PostController {
         return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
+    @GetMapping("/searchPosts")
+    @Operation(summary = "Fazer uma pesquisa de posts")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Posts retornados!",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Post.class))
+            ),
+            @ApiResponse(responseCode = "404", description = "Nenhum post encontrado! / Usuário não encontrado!", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
+    })
+    public ResponseEntity<List<Post>> searchPosts(@RequestParam(value = "text", required = false, defaultValue = "") String text,
+                                                  @RequestParam(value = "userId", required = false, defaultValue = "0") Long userId,
+                                                  @RequestParam(value = "following", required = false, defaultValue = "false" ) Boolean following,
+                                                  @RequestParam(value = "liked", required = false, defaultValue = "false" ) Boolean liked
+    ) throws IOException {
+
+        if(text.isEmpty() && !following && !liked){
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.BAD_REQUEST);
+        }
+
+        List<Post> response = service.searchPosts(text, userId, following, liked);
+        if (response == null || response.isEmpty()) {
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+
     @PatchMapping("/{idPost}")
     @Operation(summary = "Adicionar um comentário ao post")
     @ApiResponses(value = {
@@ -95,7 +126,7 @@ public class PostController {
             ,
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
     })
-    public ResponseEntity<?> adicionarComentario(@PathVariable("idPost") Long idPost, @RequestBody Comment comment){
+    public ResponseEntity<?> adicionarComentario(@PathVariable("idPost") String idPost, @RequestBody Comment comment){
 
         service.adicionarComentario(idPost, comment);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -109,7 +140,7 @@ public class PostController {
             ,
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
     })
-    public ResponseEntity<?> liked(@PathVariable("idPost") Long idPost, @PathVariable("userId") Long userId){
+    public ResponseEntity<?> liked(@PathVariable("idPost") String idPost, @PathVariable("userId") Long userId){
 
         service.liked(idPost, userId);
         return new ResponseEntity<>(service.buscarPost(idPost), HttpStatus.OK);
