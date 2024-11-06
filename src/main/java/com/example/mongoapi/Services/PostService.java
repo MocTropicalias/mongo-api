@@ -3,6 +3,8 @@ package com.example.mongoapi.Services;
 import com.example.mongoapi.Models.Comment;
 import com.example.mongoapi.Models.Post;
 import com.example.mongoapi.Repository.PostRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -12,11 +14,14 @@ import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -107,30 +112,36 @@ public class PostService {
             operations.add(Aggregation.match(Criteria.where("content").regex(text, "i"))); // "i" para case-insensitive
         }
 
-        // Condição para o campo `userId` (procura por qualquer usuário dentro de likes se for nulo)
-        if (liked) {
-            operations.add(Aggregation.match(Criteria.where("likes").in(userId)));
+        // Condição para o campo `liked` (procura por posts que o usuário tenha curtido)
+        if (liked != null && liked) {
+            operations.add(Aggregation.match(Criteria.where("likes").is(userId)));
         }
 
-        // Condição para o campo `following` (procura por qualquer id de usuário se for vazio ou nulo)
-        if (following) {
-
+        // Condição para o campo `following` (procura por posts de usuários seguidos pelo usuário atual)
+        if (following != null && following) {
             List<Long> followingIds = new ArrayList<>();
 
+            // Faz uma chamada para obter a lista de seguidores
             String url = "https://tropicalias-api-dev.onrender.com/follow/getAllfollowing/" + userId;
             HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
-            if(conn.getResponseCode() == 200){
-                followingIds = (List<Long>) (Object) conn.getContent();
+
+            if (conn.getResponseCode() == 200) {
+                // Leitura da resposta JSON e conversão para uma lista de Long
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    followingIds = mapper.readValue(reader, new TypeReference<List<Long>>() {});
+                }
             } else {
-                throw new IOException(conn.getResponseMessage());
+                throw new IOException("Failed to fetch following IDs: " + conn.getResponseMessage());
             }
 
+            System.out.println(followingIds);
             operations.add(Aggregation.match(Criteria.where("userId").in(followingIds)));
         }
 
+        // Executa a agregação e retorna os resultados
         return repository.searchPosts(Aggregation.newAggregation(operations));
     }
-
 }

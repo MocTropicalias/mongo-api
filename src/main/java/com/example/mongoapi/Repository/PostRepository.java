@@ -121,6 +121,6 @@ public class PostRepository {
     }
 
     public List<Post> searchPosts(Aggregation aggregation){
-        return mongoTemplate.aggregate(aggregation, "post", Post.class).getMappedResults();
+        return mongoTemplate.aggregate(aggregation, Post.class, Post.class).getMappedResults();
     }
 }

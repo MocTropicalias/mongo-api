@@ -105,6 +105,10 @@ public class PostController {
                                                   @RequestParam(value = "liked", required = false, defaultValue = "true" ) Boolean liked
     ) throws IOException {
 
+        if(text.isEmpty() && !following && !liked){
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.BAD_REQUEST);
+        }
+
         List<Post> response = service.searchPosts(text, userId, following, liked);
         if (response == null || response.isEmpty()) {
             return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NOT_FOUND);
